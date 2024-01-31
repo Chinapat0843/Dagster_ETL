@@ -1,0 +1,94 @@
+services:
+  dagster-dagit:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - dagster-network
+
+    
+  dagster-daemon:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: "dagster-daemon run"
+    networks:
+      - dagster-network
+
+
+  dagster-postgres:
+    image: postgres:13.3
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - dagster-postgres:/var/lib/postgresql/data
+    networks:
+      - dagster-network
+
+  pg-warehouse:
+    container_name: pg-warehouse
+    hostname: pg-warehouse
+    image: postgres:15.3
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes: 
+      # copy the sql script to create tables
+      # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5678:5432"
+    restart: always
+    networks:
+      - dagster-network
+
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4:7.3
+    environment:
+      PGADMIN_DEFAULT_EMAIL : admin_2@gmail.com
+      PGADMIN_DEFAULT_PASSWORD : password
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    #volumes:
+    #  - ./:/var/lib/pgadmin/sessions
+    #  - ./:/var/lib/pgadmin/storage
+    #  - ./:/var/lib/pgadmin/azurecredentialcache
+    #  - ./:/var/lib/pgadmin/pgadmin4.db
+    restart: always
+
+    ports:
+      - "5050:80"
+    networks:
+      - dagster-network
+
+  minioserver:
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    container_name: minio
+    command: server /data --console-address ":9001"
+    networks:
+      - dagster-network
+
+
+volumes:
+  postgres-data:
+  pgadmin:    
+  dagster-postgres:
+    driver: local
+
+networks:
+  dagster-network:
+    driver: bridge
+
+
