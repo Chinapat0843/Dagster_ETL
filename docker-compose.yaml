@@ -38,8 +38,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
     volumes: 
-      # copy the sql script to create tables
-      # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5678:5432"
@@ -55,11 +53,6 @@ services:
       PGADMIN_DEFAULT_PASSWORD : password
     volumes:
       - pgadmin:/var/lib/pgadmin
-    #volumes:
-    #  - ./:/var/lib/pgadmin/sessions
-    #  - ./:/var/lib/pgadmin/storage
-    #  - ./:/var/lib/pgadmin/azurecredentialcache
-    #  - ./:/var/lib/pgadmin/pgadmin4.db
     restart: always
 
     ports:

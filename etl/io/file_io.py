@@ -11,13 +11,13 @@ class LocalFileSystemIOManager(IOManager):
         return os.path.abspath(rpath)
 
     def handle_output(self, context, obj: DataFrame):
-        """This saves the dataframe as a CSV."""
+        """This saves the dataframe as a .parquet"""
         fpath = self._get_fs_path(context.asset_key)
         context.add_output_metadata({"file path ": fpath})
         obj.to_parquet(fpath)
 
     def load_input(self, context):
-        """This reads a dataframe from a CSV."""
+        """This reads a dataframe from a .parquet"""
         fpath = self._get_fs_path(context.asset_key)
         return pd.read_parquet(fpath)
     

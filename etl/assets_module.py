@@ -1,4 +1,4 @@
-from dagster import  asset 
+from dagster import  asset , job , repository
 from etl.resources.db_conn import get_sql_conn , get_postgres_conn
 #import needed libraries
 import pandas as pd
@@ -42,7 +42,7 @@ def extract_sfo_q2_weather(context) -> pd.DataFrame:
     return df
 
 #load data
-@asset( group_name="churn_modelling", compute_kind="pandas", io_manager_key="db_io")
+@asset(group_name="churn_modelling", compute_kind="pandas", io_manager_key="db_io")
 def dim_sfo_q2_weather(context, extract_sfo_q2_weather: pd.DataFrame) -> pd.DataFrame:
     """Transform and Stage Data into Postgres."""
     try:
@@ -52,3 +52,5 @@ def dim_sfo_q2_weather(context, extract_sfo_q2_weather: pd.DataFrame) -> pd.Data
         return df
     except Exception as e:
         context.log.info(str(e))
+
+

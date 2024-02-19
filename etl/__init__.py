@@ -1,16 +1,15 @@
 from dagster import Definitions, load_assets_from_modules
 from dagstermill import local_output_notebook_io_manager
 
-from . import assets
+from . import assets_module
 from .io import file_io, db_io_manager
-from etl.jobs import run_jupyter_job
 from etl.schedules import every_weekday_9am
-
-all_assets = load_assets_from_modules([assets ])
+from etl.jobs import run_job
+all_assets = load_assets_from_modules([assets_module])
 
 defs = Definitions(
     assets=all_assets,
-    jobs=[run_jupyter_job],
+    jobs=[run_job],
     schedules=[every_weekday_9am],
     resources={
         "file_io": file_io.LocalFileSystemIOManager(),
