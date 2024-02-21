@@ -11,6 +11,7 @@ RUN apt-get update && \
     unixodbc-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN pip install dagit dagster-webserver dagster-postgres
 # Install additional packages if needed for the PostgreSQL ODBC driver
 
 # Install pyodbc and other Python dependencies
@@ -21,8 +22,8 @@ RUN pip install -r requirements.txt
 COPY docker/dagster.yaml workspace.yaml .
 COPY . .
 
-
+EXPOSE 3000
 
 # Set up ODBC configurations if required
 
-CMD ["dagit", "-w", "workspace.yaml", "-h", "0.0.0.0", "-p", "3000"]
+CMD ["dagster-webserver", "-h", "workspace.yaml", "-h", "0.0.0.0", "-p", "3000"]

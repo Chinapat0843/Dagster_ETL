@@ -1,5 +1,5 @@
 from dagster import  asset , job , repository
-from etl.resources.db_conn import get_sql_conn , get_postgres_conn
+from etl.resources.db_conn import get_postgres_conn
 #import needed libraries
 import pandas as pd
 import logging
@@ -7,7 +7,7 @@ import logging
 @asset(group_name="churn_modelling", compute_kind="pandas" , io_manager_key="file_io")
 def read_csv_solid(context)  -> pd.DataFrame:
     # Replace '/path/to/input.csv' with your actual file path
-    file_path = r'./etl/sfo_q2_weather_sample.csv'
+    file_path = r'./data/data.csv'
     df = pd.read_csv(file_path)
     context.log.info(f'Read {len(df)} rows from {file_path}')
     return df

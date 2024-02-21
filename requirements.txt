@@ -1,9 +1,11 @@
 dagit
 dagster-postgres
 dagster
+dagster-webserver
 sqlalchemy
 dagstermill
 pyodbc
 #psycopg2
 minio
-
+pyarrow
+pandas 
