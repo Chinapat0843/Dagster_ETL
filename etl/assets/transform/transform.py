@@ -23,8 +23,8 @@ def topten_condition_occurrence(context) -> pd.DataFrame:
 
 @asset(group_name="Transform", compute_kind="pandas" , io_manager_key="file_io")
 def topten_drug_exposure(context) -> pd.DataFrame:
-   pass
-   """Extract Data from Postgresql."""
+    pass
+  
    
         
 
